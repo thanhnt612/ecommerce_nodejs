@@ -17,34 +17,26 @@ const RoleShop = {
 }
 
 class AccessService {
-    static handlerRefreshToken = async (refreshToken) => {
+    static handlerRefreshToken = async ({ refreshToken, user, keyStore }) => {
+        const { userId, email } = user;
 
-        //Check refreshToken is used 
-        const tokenUsed = await KeyTokenService.findByRefreshTokensUsed(refreshToken)
-        if (tokenUsed) {
-
-            //Verify to check user 
-            const { userId, email } = await verifyJWT(refreshToken, tokenUsed.privateKey)
-
-            //Found detection to delete token 
+        //Check Refresh Token is used => Delete
+        if (keyStore.refreshTokensUsed.includes(refreshToken)) {
             await KeyTokenService.deleteKeyById(userId)
             throw new ForbiddenError('Something went wrong!!! Please relogin')
         }
 
-        //Check refreshToken Identify
-        const tokenIdentify = await KeyTokenService.findByRefreshToken(refreshToken)
-        if (!tokenIdentify) throw new AuthFailureError('User not registered')
-        const { userId, email } = await verifyJWT(refreshToken, tokenIdentify.privateKey)
+        if (keyStore.refreshToken !== refreshToken) throw new AuthFailureError('User not registered')
 
         //Check User
-        const foundShop = findByEmail({email})
+        const foundShop = findByEmail({ email })
         if (!foundShop) throw new AuthFailureError('User not registered')
 
         //Generate new Token Pair
-        const tokens = await createTokenPair({ userId, email }, tokenIdentify.publicKey, tokenIdentify.privateKey)
+        const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey)
 
         //Update token to Database
-        await tokenIdentify.updateOne({
+        await keyStore.updateOne({
             $set: {
                 refreshToken: tokens.refreshToken
             },
@@ -54,7 +46,7 @@ class AccessService {
         })
 
         return {
-            user: { userId, email },
+            user,
             tokens
         }
     }

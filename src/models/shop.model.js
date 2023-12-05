@@ -1,12 +1,12 @@
 'use strict'
 //!dmbgum
 
-const { model, Schema, Types } = require('mongoose'); // Erase if already required
+const { model, Schema } = require('mongoose'); // Erase if already required
 
 const DOCUMENT_NAME = "Shop"
 const COLLECTION_NAME = "Shops"
 // Declare the Schema of the Mongo model
-var shopSchema = new Schema({
+const shopSchema = new Schema({
     name: {
         type: String,
         trim: true,
@@ -30,13 +30,13 @@ var shopSchema = new Schema({
         type: Schema.Types.Boolean,
         default: false
     },
-    roles:{
-        type:Array,
-        default:[]
+    roles: {
+        type: Array,
+        default: []
     }
-},{
+}, {
     collection: COLLECTION_NAME,
-    timestamps:true
+    timestamps: true
 });
 
 //Export the model
