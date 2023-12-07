@@ -1,6 +1,7 @@
 'use strict'
 
 const { product, clothing, electronic, furniture } = require('../models/product.model')
+const { insertInventory } = require('../models/repositories/inventory.repo')
 const {
     findAllDraftRepo,
     publishProductRepo,
@@ -16,7 +17,7 @@ const { removeUnCallObject, updateNestedObjectParse } = require('../utils')
 
 class ProductFactory {
     static productRegistry = {}
-    //Factory pattern to create Product
+    //Create Product Type (Clothing, Electronic, Furniture,...)
     static registerProductType(type, classRef) {
         ProductFactory.productRegistry[type] = classRef
     }
@@ -90,10 +91,21 @@ class Product {
         this.product_shop = product_shop
         this.product_attributes = product_attributes
     }
+
     //Create Product
     async createProduct(productId) {
-        return await product.create({ ...this, _id: productId })
+        const newProduct = await product.create({...this, _id: productId })
+        if (newProduct) {
+            //Add product_stock to inventory Document
+            await insertInventory({
+                productId: newProduct._id,
+                shopId: this.product_shop,
+                stock: this.product_quantity
+            })
+        }
+        return newProduct
     }
+
     //Update Product
     async updateProduct(productId, bodyUpdate) {
         return await updateProductRepo({ model: product, productId, bodyUpdate })
@@ -117,7 +129,6 @@ class Clothing extends Product {
         return newProduct
     }
     async updateProduct(productId) {
-
         const objectParams = removeUnCallObject(this)
         //Check new input product_attributes on Product
         if (objectParams.product_attributes) {
@@ -127,7 +138,6 @@ class Clothing extends Product {
                 bodyUpdate: updateNestedObjectParse(objectParams.product_attributes)
             })
         }
-
         //Update Product
         const updateProduct = await super.updateProduct(productId, updateNestedObjectParse(objectParams))
         return updateProduct
@@ -147,6 +157,21 @@ class Electronics extends Product {
         if (!newProduct) throw new BadRequestError('create new Product error')
         return newProduct
     }
+
+    async updateProduct(productId) {
+        const objectParams = removeUnCallObject(this)
+        //Check new input product_attributes on Product
+        if (objectParams.product_attributes) {
+            await updateProductRepo({
+                model: electronic,
+                productId,
+                bodyUpdate: updateNestedObjectParse(objectParams.product_attributes)
+            })
+        }
+        //Update Product
+        const updateProduct = await super.updateProduct(productId, updateNestedObjectParse(objectParams))
+        return updateProduct
+    }
 }
 
 //Type - "Furniture"
@@ -161,6 +186,20 @@ class Furniture extends Product {
         const newProduct = await super.createProduct(newFurniture._id)
         if (!newProduct) throw new BadRequestError('create new Product error')
         return newProduct
+    }
+    async updateProduct(productId) {
+        const objectParams = removeUnCallObject(this)
+        //Check new input product_attributes on Product
+        if (objectParams.product_attributes) {
+            await updateProductRepo({
+                model: furniture,
+                productId,
+                bodyUpdate: updateNestedObjectParse(objectParams.product_attributes)
+            })
+        }
+        //Update Product
+        const updateProduct = await super.updateProduct(productId, updateNestedObjectParse(objectParams))
+        return updateProduct
     }
 }
 
