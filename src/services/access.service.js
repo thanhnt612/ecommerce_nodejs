@@ -26,11 +26,11 @@ class AccessService {
             throw new ForbiddenError('Something went wrong!!! Please relogin')
         }
 
-        if (keyStore.refreshToken !== refreshToken) throw new AuthFailureError('User not registered')
+        if (keyStore.refreshToken !== refreshToken) throw new AuthFailureError('Shop not registered')
 
         //Check User
         const foundShop = findByEmail({ email })
-        if (!foundShop) throw new AuthFailureError('User not registered')
+        if (!foundShop) throw new AuthFailureError('Shop not registered')
 
         //Generate new Token Pair
         const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey)
@@ -60,7 +60,7 @@ class AccessService {
 
         //Check email in database
         const foundShop = await findByEmail({ email })
-        if (!foundShop) throw new BadRequestError('User not registered')
+        if (!foundShop) throw new BadRequestError('Shop not registered')
 
         //Compare password
         const match = bcrypt.compare(password, foundShop.password)

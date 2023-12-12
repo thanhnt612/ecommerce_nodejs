@@ -1,7 +1,7 @@
 'use strict'
 
 const DiscountService = require('../services/discount.service')
-const { OK, CREATED, SuccessResponse } = require('../status/success.response.js')
+const { SuccessResponse } = require('../status/success.response.js')
 
 class DiscountController {
     createDiscount = async (req, res, next) => {

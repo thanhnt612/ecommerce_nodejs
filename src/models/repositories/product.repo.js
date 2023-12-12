@@ -85,6 +85,23 @@ const updateProductRepo = async ({
         new: isNew
     })
 }
+
+const getProductByIdRepo = async (productId) => {
+    return await product.findOne({ _id: productId }).lean()
+}
+
+const checkProductRepo = async (product) => {
+    return await Promise.all(product.map(async prod => {
+        const foundProduct = await getProductByIdRepo(prod.productId)
+        if (foundProduct) {
+            return {
+                price: foundProduct.product_price,
+                quantity: prod.quantity,
+                productId: prod.productId,
+            }
+        }
+    }))
+}
 module.exports = {
     findAllDraftRepo,
     findAllPublishRepo,
@@ -93,6 +110,8 @@ module.exports = {
     searchProductRepo,
     findAllProductRepo,
     productDetailRepo,
-    updateProductRepo
+    updateProductRepo,
+    getProductByIdRepo,
+    checkProductRepo
 }
 
