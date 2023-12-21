@@ -14,10 +14,11 @@ const {
 } = require('../models/repositories/product.repo')
 const { BadRequestError } = require('../status/error.response')
 const { removeUnCallObject, updateNestedObjectParse } = require('../utils')
+const { pushNotifyToSystem } = require('./notification.service')
 
 class ProductFactory {
     static productRegistry = {}
-    //Create Product Type (Clothing, Electronic, Furniture,...)
+    //Create Product Type (Clothing, Electronic, Furniture,...) - Strategy pattern
     static registerProductType(type, classRef) {
         ProductFactory.productRegistry[type] = classRef
     }
@@ -102,6 +103,17 @@ class Product {
                 shopId: this.product_shop,
                 stock: this.product_quantity
             })
+            //Push notify to system collection
+            pushNotifyToSystem({
+                type: 'SHOP-001',
+                receiverId: 1,
+                senderId: this.product_shop,
+                option: {
+                    product_name: this.product_name,
+                    shop_name: this.product_shop
+                }
+            }).then(result => console.log(result))
+                .catch(console.error)
         }
         return newProduct
     }

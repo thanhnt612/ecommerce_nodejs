@@ -48,16 +48,6 @@ const searchProductRepo = async ({ keySearch }) => {
     return result
 }
 
-const queryProduct = async ({ query, limit, skip }) => {
-    return await product.find(query).
-        populate('product_shop', 'name emai -_id')
-        .sort({ updateAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean()
-        .exec()
-}
-
 const findAllProductRepo = async ({ limit, page, sort, filter, select }) => {
     const skip = (page - 1) * limit;
     const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
@@ -73,6 +63,16 @@ const findAllProductRepo = async ({ limit, page, sort, filter, select }) => {
 const productDetailRepo = async ({ product_id, unSelect }) => {
     const productDetail = await product.findById(product_id).select(unSelectData(unSelect))
     return productDetail
+}
+
+const queryProduct = async ({ query, limit, skip }) => {
+    return await product.find(query).
+        populate('product_shop', 'name email -_id')
+        .sort({ updateAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec()
 }
 
 const updateProductRepo = async ({

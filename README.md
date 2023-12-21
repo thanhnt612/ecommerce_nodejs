@@ -3,7 +3,7 @@
 #### Node.js Backend eCommerce
 #### Technical Stack:
 <ul>
-    <li>Backend: Node.js, Express.js</li>
+    <li>Backend: Node.js_v19.1.0, Express.js</li>
     <li>Database: MongoDB, Mongoose</li>
     <li>Authentication: JWT (JSON Web Token)</li>
 </ul>
@@ -20,16 +20,15 @@
 <ul>
     <li>Users and shops can register and log in with secure password hashing.</li>
     <li>JWT tokens are utilized for authorization, including refresh tokens for prolonged access and access tokens for API calls.</li>
-    <li>Users can manage their profile information, including address, payment details, and order history.</li>
-    <li>Shops can manage their storefront settings, including logo, banner, and contact information.</li>
+    <li>Users can manage their cart information, payment details, and order history.</li>
+    <li>Shops can manage their product information.</li>
 </ul>
 
 ### :bulb: Shop Management
 <ul>
     <li>Shops can add, update, edit, and delete products</li>
-    <li>Manage product inventory levels, track stock availability, and set minimum re-order quantities</li>
+    <li>Manage product inventory levels, track stock availability</li>
     <li>Create and manage discount codes for individual products or entire categories</li>
-    <li>Shops can manage their storefront settings, including logo, banner, and contact information.</li>
 </ul>
 
 ### :bulb: User Features
@@ -37,7 +36,6 @@
     <li>Browse and search for products across various categories</li>
     <li>View detailed product information, including descriptions, images, and reviews</li>
     <li>Apply available discount codes to their cart for reduced prices</li>
-    <li>Shops can manage their storefront settings, including logo, banner, and contact information.</li>
 </ul>
 
 ## :pushpin: Reflection

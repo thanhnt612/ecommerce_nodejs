@@ -127,7 +127,7 @@ class CommentService {
             $inc: { comment_right: -witdth }
         })
 
-        await commentModel.updateMany({
+         await commentModel.updateMany({
             comment_productId: productId,
             comment_left: { $gt: rightValue }
         }, {
