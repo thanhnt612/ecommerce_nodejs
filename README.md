@@ -10,7 +10,7 @@
 
 <p>
   <a href="">
-    <img src="https://skillicons.dev/icons?i=js,nodejs,express,mongodb,postman,redis,vscode"/>
+    <img src="https://skillicons.dev/icons?i=js,nodejs,express,mongodb,postman,redis,vscode,aws"/>
   </a>
 </p>
 
